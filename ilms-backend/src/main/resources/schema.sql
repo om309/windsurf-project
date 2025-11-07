@@ -98,3 +98,12 @@ CREATE TABLE IF NOT EXISTS packaging_level (
   is_serialized INTEGER,
   FOREIGN KEY(hierarchy_id) REFERENCES packaging_hierarchy(id) ON DELETE CASCADE
 );
+
+-- Users for authentication
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL,
+  password TEXT NOT NULL,
+  role TEXT NOT NULL
+);
