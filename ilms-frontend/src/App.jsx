@@ -27,6 +27,7 @@ import MaterialCreate from './components/MaterialCreate';
 import PackagingHierarchyEditor from './components/PackagingHierarchyEditor';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
+import Signup from './components/Signup';
 import Footer from './components/Footer';
 import {
   Menu as MenuIcon,
@@ -320,9 +321,14 @@ function NavBar({ onLogout }) {
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authView, setAuthView] = useState('login'); // 'login' | 'signup'
 
   if (!isAuthenticated) {
-    return <Login onLogin={() => setIsAuthenticated(true)} />;
+    return authView === 'login' ? (
+      <Login onLogin={() => setIsAuthenticated(true)} onGoSignup={() => setAuthView('signup')} />
+    ) : (
+      <Signup onSignedUp={() => setIsAuthenticated(true)} onGoLogin={() => setAuthView('login')} />
+    );
   }
 
   return (

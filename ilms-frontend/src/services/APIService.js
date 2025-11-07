@@ -4,6 +4,21 @@ const api = axios.create({
   baseURL: 'http://localhost:8080/api',
 });
 
+// Attach JWT token if present
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers = config.headers || {};
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export const AuthAPI = {
+  login: ({ email, password }) => api.post('/auth/login', { email, password }).then(r => r.data),
+  signup: ({ email, name, password }) => api.post('/auth/signup', { email, name, password }).then(r => r.data),
+};
+
 export const MaterialsAPI = {
   list: (params) => api.get('/materials', { params }).then(r => r.data),
   get: (code) => api.get(`/materials/${code}`).then(r => r.data),
