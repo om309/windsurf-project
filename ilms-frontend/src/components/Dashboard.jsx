@@ -10,8 +10,8 @@ import {
   CardContent,
   Button,
   Stack,
-  LinearProgress,
   Chip,
+  useTheme,
 } from '@mui/material';
 import {
   LocalShipping,
@@ -20,7 +20,6 @@ import {
   Security,
   TrendingUp,
   CheckCircle,
-  Schedule,
   LocationOn,
   QrCode2,
   Analytics,
@@ -30,7 +29,6 @@ import {
 const AnimatedBox = motion(Box);
 const AnimatedCard = motion(Card);
 
-// Counter animation component
 const AnimatedCounter = ({ end, duration = 2, suffix = '' }) => {
   const [count, setCount] = useState(0);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
@@ -59,9 +57,11 @@ const AnimatedCounter = ({ end, duration = 2, suffix = '' }) => {
   );
 };
 
-// Feature card component
+// Feature Card — now respects theme mode
 const FeatureCard = ({ icon: Icon, title, description, delay }) => {
+  const theme = useTheme();
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.2 });
+  const isDark = theme.palette.mode === 'dark';
 
   return (
     <AnimatedCard
@@ -71,9 +71,11 @@ const FeatureCard = ({ icon: Icon, title, description, delay }) => {
       transition={{ duration: 0.5, delay }}
       sx={{
         height: '100%',
-        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(245, 247, 250, 0.9))',
+        background: isDark
+          ? 'linear-gradient(135deg, rgba(30,30,30,0.9), rgba(50,50,50,0.9))'
+          : 'linear-gradient(135deg, rgba(255,255,255,0.9), rgba(245,247,250,0.9))',
         backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(25, 118, 210, 0.1)',
+        border: `1px solid ${theme.palette.divider}`,
         '&:hover': {
           borderColor: 'primary.main',
           '& .feature-icon': {
@@ -111,7 +113,6 @@ const FeatureCard = ({ icon: Icon, title, description, delay }) => {
   );
 };
 
-// Stat card component
 const StatCard = ({ icon: Icon, value, label, color, delay }) => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
 
@@ -168,27 +169,14 @@ const StatCard = ({ icon: Icon, value, label, color, delay }) => {
 };
 
 export default function Dashboard() {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
+
   const features = [
-    {
-      icon: QrCode2,
-      title: 'Real-Time Tracking',
-      description: 'Track your shipments in real-time with advanced GPS and barcode scanning technology.',
-    },
-    {
-      icon: Analytics,
-      title: 'Advanced Analytics',
-      description: 'Get detailed insights and analytics on your logistics operations with interactive dashboards.',
-    },
-    {
-      icon: Security,
-      title: 'Secure & Compliant',
-      description: 'Enterprise-grade security with full compliance to international logistics standards.',
-    },
-    {
-      icon: Speed,
-      title: 'Lightning Fast',
-      description: 'Optimized performance ensures quick access to critical information when you need it.',
-    },
+    { icon: QrCode2, title: 'Real-Time Tracking', description: 'Track your shipments in real-time with advanced GPS and barcode scanning technology.' },
+    { icon: Analytics, title: 'Advanced Analytics', description: 'Get detailed insights and analytics on your logistics operations with interactive dashboards.' },
+    { icon: Security, title: 'Secure & Compliant', description: 'Enterprise-grade security with full compliance to international logistics standards.' },
+    { icon: Speed, title: 'Lightning Fast', description: 'Optimized performance ensures quick access to critical information when you need it.' },
   ];
 
   const stats = [
@@ -219,7 +207,7 @@ export default function Dashboard() {
           mb: 6,
         }}
       >
-        {/* Animated background elements */}
+        {/* Floating lights */}
         {[...Array(15)].map((_, i) => (
           <motion.div
             key={i}
@@ -340,15 +328,8 @@ export default function Dashboard() {
                   }}
                 >
                   <motion.div
-                    animate={{
-                      y: [0, -15, 0],
-                      rotate: [0, 3, 0],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
+                    animate={{ y: [0, -15, 0], rotate: [0, 3, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                   >
                     <LocalShipping sx={{ fontSize: 140, color: 'rgba(255, 255, 255, 0.9)' }} />
                   </motion.div>
@@ -362,9 +343,9 @@ export default function Dashboard() {
       {/* Statistics Section */}
       <Container maxWidth="lg" sx={{ mb: 8 }}>
         <Grid container spacing={2}>
-          {stats.map((stat, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
-              <StatCard {...stat} delay={index * 0.05} />
+          {stats.map((stat, i) => (
+            <Grid item xs={12} sm={6} md={3} key={i}>
+              <StatCard {...stat} delay={i * 0.05} />
             </Grid>
           ))}
         </Grid>
@@ -388,16 +369,22 @@ export default function Dashboard() {
         </AnimatedBox>
 
         <Grid container spacing={3}>
-          {features.map((feature, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
-              <FeatureCard {...feature} delay={index * 0.05} />
+          {features.map((feature, i) => (
+            <Grid item xs={12} sm={6} md={3} key={i}>
+              <FeatureCard {...feature} delay={i * 0.05} />
             </Grid>
           ))}
         </Grid>
       </Container>
 
       {/* How It Works Section */}
-      <Box sx={{ bgcolor: 'grey.50', py: 8, mb: 8 }}>
+      <Box
+        sx={{
+          bgcolor: isDark ? 'background.default' : 'grey.50',
+          py: 8,
+          mb: 8,
+        }}
+      >
         <Container maxWidth="lg">
           <AnimatedBox
             initial={{ opacity: 0, y: 20 }}
@@ -415,13 +402,13 @@ export default function Dashboard() {
           </AnimatedBox>
 
           <Grid container spacing={3} alignItems="center">
-            {steps.map((step, index) => (
-              <Grid item xs={12} md={3} key={index}>
+            {steps.map((step, i) => (
+              <Grid item xs={12} md={3} key={i}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
                 >
                   <Stack alignItems="center" spacing={1.5} sx={{ position: 'relative' }}>
                     <Box
@@ -429,8 +416,8 @@ export default function Dashboard() {
                         width: 60,
                         height: 60,
                         borderRadius: '50%',
-                        background: `linear-gradient(135deg, ${index % 2 === 0 ? '#1976D2' : '#42A5F5'}, ${
-                          index % 2 === 0 ? '#42A5F5' : '#90CAF9'
+                        background: `linear-gradient(135deg, ${i % 2 === 0 ? '#1976D2' : '#42A5F5'}, ${
+                          i % 2 === 0 ? '#42A5F5' : '#90CAF9'
                         })`,
                         display: 'flex',
                         alignItems: 'center',
@@ -441,7 +428,7 @@ export default function Dashboard() {
                     >
                       <step.icon sx={{ fontSize: 28, color: 'white' }} />
                       <Chip
-                        label={index + 1}
+                        label={i + 1}
                         size="small"
                         sx={{
                           position: 'absolute',
@@ -463,30 +450,6 @@ export default function Dashboard() {
                     <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
                       {step.description}
                     </Typography>
-                    {index < steps.length - 1 && (
-                      <Box
-                        sx={{
-                          display: { xs: 'none', md: 'block' },
-                          position: 'absolute',
-                          top: 30,
-                          left: '100%',
-                          width: '100%',
-                          height: 1.5,
-                          background: 'linear-gradient(90deg, #1976D2, #42A5F5)',
-                          '&::after': {
-                            content: '""',
-                            position: 'absolute',
-                            right: 0,
-                            top: -3,
-                            width: 0,
-                            height: 0,
-                            borderLeft: '6px solid #42A5F5',
-                            borderTop: '4px solid transparent',
-                            borderBottom: '4px solid transparent',
-                          },
-                        }}
-                      />
-                    )}
                   </Stack>
                 </motion.div>
               </Grid>

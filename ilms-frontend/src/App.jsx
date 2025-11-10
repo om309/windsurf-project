@@ -38,7 +38,10 @@ import {
   Settings,
   Logout,
   LocalShipping,
+  Brightness4,
+  Brightness7,
 } from '@mui/icons-material';
+import { useThemeMode } from './contexts/ThemeContext';
 
 const AnimatedBox = motion(Box);
 
@@ -47,6 +50,7 @@ function NavBar({ onLogout }) {
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const { mode, toggleTheme } = useThemeMode();
 
   const menuItems = [
     { label: 'Dashboard', icon: DashboardIcon, path: '/' },
@@ -128,6 +132,19 @@ function NavBar({ onLogout }) {
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Tooltip title={mode === 'light' ? 'Dark Mode' : 'Light Mode'}>
+              <IconButton 
+                color="inherit" 
+                onClick={toggleTheme}
+                sx={{
+                  transition: 'transform 0.3s',
+                  '&:hover': { transform: 'rotate(180deg)' },
+                }}
+              >
+                {mode === 'light' ? <Brightness4 /> : <Brightness7 />}
+              </IconButton>
+            </Tooltip>
+
             <Tooltip title="Notifications">
               <IconButton color="inherit">
                 <Badge badgeContent={3} color="error">
@@ -343,7 +360,7 @@ export default function App() {
             height: '8px',
           },
           '*::-webkit-scrollbar-track': {
-            background: '#f1f1f1',
+            background: (theme) => theme.palette.mode === 'light' ? '#f1f1f1' : '#1A2027',
           },
           '*::-webkit-scrollbar-thumb': {
             background: '#1976D2',

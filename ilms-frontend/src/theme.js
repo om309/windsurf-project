@@ -1,17 +1,17 @@
 import { createTheme } from '@mui/material/styles';
 
-const theme = createTheme({
+const getTheme = (mode) => createTheme({
   palette: {
-    mode: 'light',
+    mode,
     primary: {
-      main: '#1976D2', // Ocean Blue
-      dark: '#0A1929', // Deep Navy
-      light: '#42A5F5', // Sky Blue
+      main: '#1976D2',
+      dark: '#0A1929',
+      light: '#42A5F5',
       contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#00BCD4', // Cyan
-      dark: '#009688', // Teal
+      main: '#00BCD4',
+      dark: '#009688',
       light: '#90CAF9',
       contrastText: '#FFFFFF',
     },
@@ -36,15 +36,15 @@ const theme = createTheme({
       dark: '#1976D2',
     },
     background: {
-      default: '#F5F7FA',
-      paper: '#FFFFFF',
+      default: mode === 'light' ? '#F5F7FA' : '#0A1929',
+      paper: mode === 'light' ? '#FFFFFF' : '#1A2027',
     },
     text: {
-      primary: '#263238',
-      secondary: '#90A4AE',
-      disabled: '#B0BEC5',
+      primary: mode === 'light' ? '#263238' : '#E3F2FD',
+      secondary: mode === 'light' ? '#90A4AE' : '#B0BEC5',
+      disabled: mode === 'light' ? '#B0BEC5' : '#78909C',
     },
-    divider: '#E0E0E0',
+    divider: mode === 'light' ? '#E0E0E0' : '#37474F',
     grey: {
       50: '#FAFAFA',
       100: '#F5F5F5',
@@ -130,7 +130,7 @@ const theme = createTheme({
   shape: {
     borderRadius: 12,
   },
-  shadows: [
+  shadows: mode === 'light' ? [
     'none',
     '0px 2px 4px rgba(0, 0, 0, 0.05)',
     '0px 4px 8px rgba(0, 0, 0, 0.08)',
@@ -156,6 +156,32 @@ const theme = createTheme({
     '0px 56px 112px rgba(25, 118, 210, 0.8)',
     '0px 60px 120px rgba(25, 118, 210, 0.85)',
     '0px 64px 128px rgba(25, 118, 210, 0.9)',
+  ] : [
+    'none',
+    '0px 2px 4px rgba(0, 0, 0, 0.3)',
+    '0px 4px 8px rgba(0, 0, 0, 0.35)',
+    '0px 8px 16px rgba(0, 0, 0, 0.4)',
+    '0px 12px 24px rgba(0, 0, 0, 0.45)',
+    '0px 16px 32px rgba(0, 0, 0, 0.5)',
+    '0px 20px 40px rgba(0, 0, 0, 0.55)',
+    '0px 24px 48px rgba(0, 0, 0, 0.6)',
+    '0px 2px 4px rgba(25, 118, 210, 0.3)',
+    '0px 4px 8px rgba(25, 118, 210, 0.35)',
+    '0px 8px 16px rgba(25, 118, 210, 0.4)',
+    '0px 12px 24px rgba(25, 118, 210, 0.45)',
+    '0px 16px 32px rgba(25, 118, 210, 0.5)',
+    '0px 20px 40px rgba(25, 118, 210, 0.55)',
+    '0px 24px 48px rgba(25, 118, 210, 0.6)',
+    '0px 28px 56px rgba(25, 118, 210, 0.65)',
+    '0px 32px 64px rgba(25, 118, 210, 0.7)',
+    '0px 36px 72px rgba(25, 118, 210, 0.75)',
+    '0px 40px 80px rgba(25, 118, 210, 0.8)',
+    '0px 44px 88px rgba(25, 118, 210, 0.85)',
+    '0px 48px 96px rgba(25, 118, 210, 0.9)',
+    '0px 52px 104px rgba(25, 118, 210, 0.95)',
+    '0px 56px 112px rgba(25, 118, 210, 1)',
+    '0px 60px 120px rgba(25, 118, 210, 1)',
+    '0px 64px 128px rgba(25, 118, 210, 1)',
   ],
   components: {
     MuiCssBaseline: {
@@ -163,15 +189,20 @@ const theme = createTheme({
         '@import': 'url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap")',
         body: {
           scrollBehavior: 'smooth',
+          transition: 'background-color 0.3s ease, color 0.3s ease',
         },
       },
     },
     MuiAppBar: {
       styleOverrides: {
         root: {
-          boxShadow: '0px 2px 8px rgba(10, 25, 41, 0.08)',
+          boxShadow: mode === 'light' 
+            ? '0px 2px 8px rgba(10, 25, 41, 0.08)' 
+            : '0px 2px 8px rgba(0, 0, 0, 0.5)',
           backdropFilter: 'blur(8px)',
-          backgroundColor: 'rgba(25, 118, 210, 0.95)',
+          backgroundColor: mode === 'light' 
+            ? 'rgba(25, 118, 210, 0.95)' 
+            : 'rgba(10, 25, 41, 0.95)',
         },
       },
     },
@@ -183,11 +214,15 @@ const theme = createTheme({
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           '&:hover': {
             transform: 'translateY(-2px)',
-            boxShadow: '0px 8px 16px rgba(25, 118, 210, 0.3)',
+            boxShadow: mode === 'light'
+              ? '0px 8px 16px rgba(25, 118, 210, 0.3)'
+              : '0px 8px 16px rgba(25, 118, 210, 0.5)',
           },
         },
         contained: {
-          boxShadow: '0px 4px 12px rgba(25, 118, 210, 0.2)',
+          boxShadow: mode === 'light'
+            ? '0px 4px 12px rgba(25, 118, 210, 0.2)'
+            : '0px 4px 12px rgba(25, 118, 210, 0.4)',
         },
       },
     },
@@ -195,12 +230,23 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 16,
-          boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.06)',
+          boxShadow: mode === 'light'
+            ? '0px 4px 16px rgba(0, 0, 0, 0.06)'
+            : '0px 4px 16px rgba(0, 0, 0, 0.4)',
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           '&:hover': {
             transform: 'translateY(-4px)',
-            boxShadow: '0px 12px 32px rgba(0, 0, 0, 0.12)',
+            boxShadow: mode === 'light'
+              ? '0px 12px 32px rgba(0, 0, 0, 0.12)'
+              : '0px 12px 32px rgba(0, 0, 0, 0.6)',
           },
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none',
         },
       },
     },
@@ -218,7 +264,9 @@ const theme = createTheme({
             '&.Mui-focused': {
               '& .MuiOutlinedInput-notchedOutline': {
                 borderWidth: 2,
-                boxShadow: '0px 0px 0px 4px rgba(25, 118, 210, 0.1)',
+                boxShadow: mode === 'light'
+                  ? '0px 0px 0px 4px rgba(25, 118, 210, 0.1)'
+                  : '0px 0px 0px 4px rgba(25, 118, 210, 0.2)',
               },
             },
           },
@@ -237,7 +285,9 @@ const theme = createTheme({
       styleOverrides: {
         paper: {
           borderRight: 'none',
-          boxShadow: '4px 0px 16px rgba(0, 0, 0, 0.08)',
+          boxShadow: mode === 'light'
+            ? '4px 0px 16px rgba(0, 0, 0, 0.08)'
+            : '4px 0px 16px rgba(0, 0, 0, 0.5)',
         },
       },
     },
@@ -261,4 +311,4 @@ const theme = createTheme({
   },
 });
 
-export default theme;
+export default getTheme;

@@ -3,17 +3,29 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import App from './App';
-import theme from './theme';
+import getTheme from './theme';
+import { ThemeModeProvider, useThemeMode } from './contexts/ThemeContext';
 
-const container = document.getElementById('root');
-const root = createRoot(container);
-root.render(
-  <React.StrictMode>
+const ThemedApp = () => {
+  const { mode } = useThemeMode();
+  const theme = React.useMemo(() => getTheme(mode), [mode]);
+
+  return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
         <App />
       </BrowserRouter>
     </ThemeProvider>
+  );
+};
+
+const container = document.getElementById('root');
+const root = createRoot(container);
+root.render(
+  <React.StrictMode>
+    <ThemeModeProvider>
+      <ThemedApp />
+    </ThemeModeProvider>
   </React.StrictMode>
 );
